@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='json_database',
-    version='0.5.6',
+    version='0.6.0',
     packages=['json_database', 'json_database.utils'],
     url='https://github.com/HelloChatterbox/json_database',
     license='MIT',

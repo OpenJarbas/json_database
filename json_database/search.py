@@ -135,7 +135,7 @@ class Query:
             self.result = [a for a in self.result if a[key] == value]
         return self
 
-    def bellow(self, key, value, ignore_case=False):
+    def below(self, key, value, ignore_case=False):
         self.contains_key(key, ignore_case=ignore_case)
         self.result = [a for a in self.result if a[key] < value]
         return self
@@ -145,7 +145,7 @@ class Query:
         self.result = [a for a in self.result if a[key] > value]
         return self
 
-    def bellow_or_equal(self, key, value, ignore_case=False):
+    def below_or_equal(self, key, value, ignore_case=False):
         self.contains_key(key, ignore_case=ignore_case)
         self.result = [a for a in self.result if a[key] <= value]
         return self

@@ -12,6 +12,7 @@ from json_database.utils.combo_lock import ComboLock, DummyLock
 from tempfile import gettempdir
 
 LOG = logging.getLogger("JsonDatabase")
+LOG.setLevel("INFO")
 
 
 class JsonStorage(dict):
@@ -23,8 +24,6 @@ class JsonStorage(dict):
         super().__init__()
         lock_path = join(gettempdir(), path.split("/")[-1] + ".lock")
         if disable_lock:
-            LOG.warning("Lock is disabled, database might get corrupted if "
-                        "different processes try to use it at same time!")
             self.lock = DummyLock(lock_path)
         else:
             self.lock = ComboLock(lock_path)
@@ -300,6 +299,7 @@ class JsonDatabaseXDG(JsonDatabase):
                  extension="jsondb"):
         path = join(xdg_folder, subfolder, f"{name}.{extension}")
         super().__init__(name, path, disable_lock=disable_lock, extension=extension)
+
 
 class JsonConfigXDG(JsonStorageXDG):
     """ xdg respectful config files, using json_storage.JsonStorageXDG """
