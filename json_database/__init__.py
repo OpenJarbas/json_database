@@ -1,15 +1,18 @@
-from json_database.utils import *
-from json_database.exceptions import InvalidItemID, DatabaseNotCommitted, \
-    SessionError, MatchError
-from os.path import expanduser, isdir, dirname, exists, isfile, join
-from os import makedirs, remove
 import json
 import logging
+from os import makedirs, remove
+from os.path import expanduser, isdir, dirname, exists, isfile, join
 from pprint import pprint
-from xdg import BaseDirectory
-from json_database.utils.combo_lock import ComboLock, DummyLock
-
 from tempfile import gettempdir
+
+from combo_lock import ComboLock
+
+from json_database.exceptions import InvalidItemID, DatabaseNotCommitted, \
+    SessionError, MatchError
+from json_database.utils import DummyLock, load_commented_json, merge_dict, \
+    jsonify_recursively, get_key_recursively, get_key_recursively_fuzzy, \
+    get_value_recursively_fuzzy, get_value_recursively
+from json_database.xdg_utils import xdg_cache_home, xdg_data_home, xdg_config_home
 
 LOG = logging.getLogger("JsonDatabase")
 LOG.setLevel("INFO")
@@ -103,11 +106,12 @@ class JsonStorage(dict):
 
 class JsonDatabase(dict):
     """ searchable persistent dict """
+
     def __init__(self,
-            name,
-            path=None,
-            disable_lock=False,
-            extension="json"):
+                 name,
+                 path=None,
+                 disable_lock=False,
+                 extension="json"):
         super().__init__()
         self.name = name
         self.path = path or f"{name}.{extension}"
@@ -283,7 +287,7 @@ class JsonStorageXDG(JsonStorage):
 
     def __init__(self,
                  name,
-                 xdg_folder=BaseDirectory.xdg_cache_home,
+                 xdg_folder=xdg_cache_home(),
                  disable_lock=False, subfolder="json_database",
                  extension="json"):
         self.name = name
@@ -294,7 +298,7 @@ class JsonStorageXDG(JsonStorage):
 class JsonDatabaseXDG(JsonDatabase):
     """ xdg respectful json database """
 
-    def __init__(self, name, xdg_folder=BaseDirectory.xdg_data_home,
+    def __init__(self, name, xdg_folder=xdg_data_home(),
                  disable_lock=False, subfolder="json_database",
                  extension="jsondb"):
         path = join(xdg_folder, subfolder, f"{name}.{extension}")
@@ -304,7 +308,7 @@ class JsonDatabaseXDG(JsonDatabase):
 class JsonConfigXDG(JsonStorageXDG):
     """ xdg respectful config files, using json_storage.JsonStorageXDG """
 
-    def __init__(self, name, xdg_folder=BaseDirectory.xdg_config_home,
+    def __init__(self, name, xdg_folder=xdg_config_home(),
                  disable_lock=False, subfolder="json_database",
                  extension="json"):
         super().__init__(name, xdg_folder, disable_lock, subfolder, extension)

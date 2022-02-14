@@ -1,5 +1,5 @@
 from json_database.utils import fuzzy_match, match_one
-from json_database import JsonDatabase, JsonStorageXDG
+from json_database import JsonDatabase
 
 
 class Query:
