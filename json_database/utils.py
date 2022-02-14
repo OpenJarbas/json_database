@@ -2,6 +2,39 @@ import json
 from difflib import SequenceMatcher
 
 
+class DummyLock:
+    """ A fake lock.
+
+    Arguments:
+        path (str): path to the lockfile for the lock
+    """
+    def __init__(self, path=""):
+        self.path = path
+
+    def acquire(self, blocking=True):
+        """ Acquire lock, locks thread and process lock.
+
+        Arguments:
+            blocking(bool): Set's blocking mode of acquire operation.
+                            Default True.
+
+        Returns: True if lock succeeded otherwise False
+        """
+        return True
+
+    def release(self):
+        """ Release acquired lock. """
+        pass
+
+    def __enter__(self):
+        """ Context handler, acquires lock in blocking mode. """
+        return self
+
+    def __exit__(self, _type, value, traceback):
+        """ Releases the lock. """
+        pass
+
+
 def fuzzy_match(x, against):
     """Perform a 'fuzzy' comparison between two strings.
     Returns:

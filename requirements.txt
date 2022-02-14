@@ -1,2 +1,1 @@
-pyxdg
-fasteners
+combo_lock~=0.2.1
