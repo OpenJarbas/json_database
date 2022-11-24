@@ -72,7 +72,7 @@ class Query:
                     after.append(a)
             self.result = after
         else:
-            self.result = [a for a in self.result if value in a[key]]
+            self.result = [a for a in self.result if value == a[key]]
         return self
 
     def value_contains(self, key, value, ignore_case=False):
